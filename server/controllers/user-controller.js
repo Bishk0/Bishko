@@ -11,10 +11,10 @@ class UserController {
         return next(ApiError.BadRequest('Помилка при валідації', errors.array()));
       }
 
-      const {fullName, email, password} = req.body
-      const userData = await userService.registration(fullName, email, password)
+      const {fullName, email, password} = req.body;
+      const userData = await userService.registration(fullName, email, password);
 
-      res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+      res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
 
       return res.json(userData)
     } catch (e) {
@@ -24,7 +24,13 @@ class UserController {
 
   async login(req, res, next) {
     try {
-      
+      const {email, password} = req.body;
+      const userData = await userService.login(email, password);
+
+      res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
+
+      return res.json(userData)
+
     } catch (e) {
       next(e);
     }
