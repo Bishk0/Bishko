@@ -4,13 +4,14 @@ const uuid = require('uuid')
 const mailService = require('./mail-service')
 const tokenService = require('./token-service')
 const UserDto = require('../dtos/user-dto')
+const ApiError = require('../exceptions/api-error')
 
 class UserService {
   async registration(fullName, email, password) {
     const candidate = await UserModel.findOne({email})
 
     if (candidate) {
-      throw new Error(`Користувач з поштовою адресою ${email} вже існує.`)
+      throw ApiError.BadRequest(`Користувач з поштовою адресою ${email} вже існує.`)
     }
 
     const hashPassword = await bcrypt.hash(password, 10)
@@ -36,7 +37,7 @@ class UserService {
     const user = await UserModel.findOne({activationLink});
 
     if (!user) {
-      throw new Error('Некоректна силка активації!')
+      throw ApiError.BadRequest('Некоректна силка активації!')
     }
 
     user.isActivated = true;
