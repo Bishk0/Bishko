@@ -6,7 +6,7 @@ const tokenService = require('./token-service')
 const UserDto = require('../dtos/user-dto')
 
 class UserService {
-  async registration(email, password) {
+  async registration(fullName, email, password) {
     const candidate = await UserModel.findOne({email})
 
     if (candidate) {
@@ -16,7 +16,7 @@ class UserService {
     const hashPassword = await bcrypt.hash(password, 10)
     const activationLink = uuid.v4()
     const user = await UserModel.create(
-      {email, password: hashPassword, activationLink}
+      {fullName, email, password: hashPassword, activationLink}
     )
     
     await mailService.sendActivationMail(
@@ -30,6 +30,17 @@ class UserService {
     await tokenService.saveToken(userDto.id, tokens.refreshToken)
 
     return { ...tokens, user: userDto }
+  }
+
+  async activate(activationLink) {
+    const user = await UserModel.findOne({activationLink});
+
+    if (!user) {
+      throw new Error('Некоректна силка активації!')
+    }
+
+    user.isActivated = true;
+    await user.save()
   }
 }
 
