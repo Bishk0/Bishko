@@ -1,10 +1,12 @@
-import React, {FC, useState} from "react";
+import React, {FC, useContext, useState} from "react";
+import { Context } from "..";
 
 const RegistrationFrom: FC = () => {
   const [fullname, setFullName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [repeatPassword, setRepeatPassword] = useState<string>('');
+  const { store } = useContext(Context);
 
   return (
     <>
@@ -32,7 +34,7 @@ const RegistrationFrom: FC = () => {
         onChange={event => setRepeatPassword(event.target.value)}
         placeholder="Repeat Password"
       />
-      <button>Register</button>
+      <button onClick={() => store.registration(fullname, email, password)}>Register</button>
     </>
   );
 }

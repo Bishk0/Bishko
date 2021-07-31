@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.scss';
+import LoginFrom from './components/LoginForm';
 import RegistrationFrom from './components/RegistrationForm';
 
 const App = () =>(
@@ -8,6 +9,8 @@ const App = () =>(
     <p>Bring your media to the next level!</p>
 
     <RegistrationFrom />
+    <br />
+    <LoginFrom />
   </div>
 );
 
